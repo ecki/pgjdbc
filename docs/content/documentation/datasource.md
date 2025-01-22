@@ -26,11 +26,15 @@ used in an application server environment unless the application server does not
 
 ## Application Servers ConnectionPoolDataSource
 
-PostgreSQL® includes one implementation of `ConnectionPoolDataSource` named `org.postgresql.ds.PGConnectionPoolDataSource` .
+PostgreSQL® includes one implementation of `ConnectionPoolDataSource` named `org.postgresql.ds.PGConnectionPoolDataSource`.
+
+There is also an implementation of the `javax.sql.XADatasource` named `org.postgresql.xa.PGXADataSource` used in some application server environments for distributed transactions.
+The transaction manager of the application server will use the `javax.transaction.xa.XAResource` interface of the connection objects to control the transactions.
 
 JDBC requires that a `ConnectionPoolDataSource` be configured via JavaBean properties, shown in
 [Table 11.1, “`ConnectionPoolDataSource` Configuration Properties”](/documentation/datasource/#table111-connectionpooldatasource-configuration-properties),
 so there are get and set methods for each of these properties.
+
 
 ##### Table 11.1.  `ConnectionPoolDataSource` Configuration Properties
 
@@ -44,10 +48,12 @@ so there are get and set methods for each of these properties.
 |ssl|BOOLEAN| If `true` , use SSL encrypted connections (default `false` )                                                                                         |
 |sslfactory|STRING| Custom `javax.net.ssl.SSLSocketFactory` class name (see the section called [“Custom SSLSocketFactory”](ssl-factory.html))                            |
 |defaultAutoCommit|BOOLEAN| Whether connections should have autocommit enabled or disabled when they are supplied to the caller. The default is `false` , to disable autocommit. |
+|url|STRING| Connection string as JDBC URL, optionally specifying some or all connection properties. Reading this property will build a synthetic complete connection string from all settings provided. |
 
-Many application servers use a properties-style syntax to configure these properties, so it would not be unusual to enter
-properties as a block of text. If the application server provides a single area to enter all the properties, they might
-be listed like this:
+Many application servers use a properties-style syntax to configure these properties,
+so it would not be unusual to enter properties as a block of text.
+If the application server provides a single area to enter all the properties,
+they might be listed like this:
 
  `serverName=localhost`
 
@@ -60,6 +66,9 @@ be listed like this:
 Or, if semicolons are used as separators instead of newlines, it could look like this:
 
  `serverName=localhost;databaseName=test;user=testuser;password=testpassword`
+
+As an extension to the bean-style setters you can also specify a JDBC URL,
+containing a semicolon separated list of all properties which are also accepted by the driver.
 
 ## Applications DataSource
 
