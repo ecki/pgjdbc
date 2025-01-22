@@ -26,15 +26,15 @@ used in an application server environment unless the application server does not
 
 ## Application Servers ConnectionPoolDataSource
 
-PostgreSQL® includes one implementation of `ConnectionPoolDataSource` named `org.postgresql.ds.PGConnectionPoolDataSource`.
+PostgreSQL® includes one implementation of `ConnectionPoolDataSource` named `org.postgresql.ds.PGConnectionPoolDataSource` .
 
-There is also an implementation of the `javax.sql.XADatasource` named `org.postgresql.xa.PGXADataSource` used in some application server environments for distributed transactions.
+There is also an implementation of the `javax.sql.XADataSource` named `org.postgresql.xa.PGXADataSource` ,
+used in some application server environments for distributed transactions.
 The transaction manager of the application server will use the `javax.transaction.xa.XAResource` interface of the connection objects to control the transactions.
 
 JDBC requires that a `ConnectionPoolDataSource` be configured via JavaBean properties, shown in
 [Table 11.1, “`ConnectionPoolDataSource` Configuration Properties”](/documentation/datasource/#table111-connectionpooldatasource-configuration-properties),
 so there are get and set methods for each of these properties.
-
 
 ##### Table 11.1.  `ConnectionPoolDataSource` Configuration Properties
 
@@ -55,20 +55,29 @@ so it would not be unusual to enter properties as a block of text.
 If the application server provides a single area to enter all the properties,
 they might be listed like this:
 
- `serverName=localhost`
-
- `databaseName=test`
-
- `user=testuser`
-
- `password=testpassword`
+```properties
+serverName=localhost 
+databaseName=test
+user=testuser
+password=testpassword
+```
 
 Or, if semicolons are used as separators instead of newlines, it could look like this:
 
  `serverName=localhost;databaseName=test;user=testuser;password=testpassword`
 
-As an extension to the bean-style setters you can also specify a JDBC URL,
-containing a semicolon separated list of all properties which are also accepted by the driver.
+As an extension to the JavaBean-style setters you can also specify a JDBC URL,
+containing a semicolon separated list of all properties with
+
+```Java
+source.setUrl("jdbc:postgresql://localhost/databaseName=test;user=testuser")`
+```
+
+This will parse the combined properties and set them individually.
+Allowing the driver JDBC syntax to be used with DataSources as well.
+
+If the application server provides a way to specify credentials seperately from the properties,
+it is typically a good idea to minimize the risk of exposure. 
 
 ## Applications DataSource
 
