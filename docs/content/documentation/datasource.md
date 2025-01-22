@@ -57,20 +57,20 @@ they might be listed like this:
 
 ```properties
 serverName=localhost 
-databaseName=test
+databaseName=testdb
 user=testuser
 password=testpassword
 ```
 
 Or, if semicolons are used as separators instead of newlines, it could look like this:
 
- `serverName=localhost;databaseName=test;user=testuser;password=testpassword`
+ `serverName=localhost;databaseName=testdb;user=testuser;password=testpassword`
 
 As an extension to the JavaBean-style setters you can also specify a JDBC URL,
 containing a semicolon separated list of all properties with
 
-```Java
-source.setUrl("jdbc:postgresql://localhost/databaseName=test;user=testuser")`
+```java
+source.setUrl("jdbc:postgresql://localhost/test?user=testuser&ssl=true");
 ```
 
 This will parse the combined properties and set them individually.
